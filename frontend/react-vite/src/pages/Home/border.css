@@ -1,0 +1,50 @@
+.feature-card {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    /* transition: transform 0.3s ease; */
+  }
+
+.feature-card {
+    position: relative;
+    padding: 20px;
+    background: white;
+    border: none;
+  }
+  
+  .feature-card::before,
+  .feature-card::after {
+    content: '';
+    position: absolute;
+    background: #2c3e50;
+    transition: all 0.6s ease;
+    height: 0;
+  }
+  
+  /* Левая граница */
+  .feature-card::before {
+    left: 0;
+    bottom: 0;
+    width: 2px;
+    height: 0;
+  }
+  
+  /* Правая граница */
+  .feature-card::after {
+    right: 0;
+    bottom: 0;
+    width: 2px;
+    height: 0;
+  }
+  
+  .feature-card:hover::before,
+  .feature-card:hover::after {
+    height: 100%;
+  }
+  
+  /* Добавляем верхнюю границу с задержкой */
+  .feature-card::hover::before {
+    transition-delay: 0.3s;
+  }

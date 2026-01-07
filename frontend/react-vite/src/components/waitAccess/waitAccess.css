@@ -1,0 +1,56 @@
+.wait-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  min-height: calc(100vh - 100px);
+  max-width: 600px;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.wait-container a {
+  color: #1C4DFF;
+
+  font-weight: 500;
+  font-size: 0.9rem;
+  align-self: center;
+  padding-top: 1rem;
+}
+.wait-container a:hover {
+    transition: 0.5s;
+    color: #474747;
+}
+
+.wait-block {
+  display: flex;
+  background-color: white;
+  text-align: center;
+  flex-direction: column;
+  padding: 2rem 4rem;
+  cursor:pointer;transform: scale(1);transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);box-shadow: 0 2px 8px rgba(107, 67, 253, 0.3);
+}
+
+.wait-block:hover {
+  filter: brightness(1.05);
+  transform: scale(1.02);
+  box-shadow: 0 6px 20px rgba(107, 67, 253, 0.4);
+}
+
+.text-wait {
+  border-radius: 1rem;
+  padding: 20px 0px 0px 0px;
+  font-size:0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.header-wait {
+  font-size: 1.2rem;
+}
+.Error{
+  font-size:0.9rem;
+  font-weight: 500;
+  padding-top: 20px;
+  color: rgb(255, 66, 66);
+}

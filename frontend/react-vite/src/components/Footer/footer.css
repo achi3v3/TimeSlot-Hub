@@ -1,0 +1,130 @@
+/* ФУТЕР */
+.home-footer {
+  background: linear-gradient(135deg, #667eea 0%, #90a8ff 100%);
+    padding: 30px 0px 20px 5vw;
+    border-top: 1px solid #e1e0e0;
+}
+
+.footer-content {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: grid;
+    grid-template-columns: 2.5fr 2fr 2.5fr;
+    gap: 40px;
+}
+
+.footer-section {
+    display: flex;
+    flex-direction: column;
+}
+
+.footer-logo {
+    color: #ffffff;
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 12px;
+}
+
+.footer-description {
+    color: #434343;
+    font-size: 14px;
+    line-height: 1.5;
+    margin: 0;
+}
+
+.footer-title {
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0 0 16px 0;
+}
+
+.footer-links {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.footer-links li {
+    margin-bottom: 10px;
+}
+
+.footer-links a {
+    color: #434343;
+    text-decoration: none;
+    font-size: 14px;
+    transition: color 0.3s ease;
+}
+
+.footer-links a:hover {
+    color: #ffffff;
+}
+
+.footer-bottom {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 20px 24px 0;
+    border-top: 1px solid #8a8795;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 30px;
+}
+
+.footer-copyright {
+    color: hsl(0, 0%, 100%);
+    font-size: 14px;
+}
+
+.footer-made-with {
+    color: #ffffff;
+    font-size: 14px;
+}
+
+/* Адаптивность для футера */
+@media (max-width: 900px) {
+    .footer-content {
+        grid-template-columns: 1fr 1fr;
+        gap: 30px;
+    }
+    .footer-title,
+    .footer-description,
+    .footer-links a {
+        font-size: 13px;
+    }
+    .footer-links li {
+        margin-bottom: 1px;
+    }
+}
+
+@media (max-width: 600px) {
+    .footer-content {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .footer-bottom {
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+    }
+    .footer-logo {
+        font-size: 20px;
+    }
+
+    .footer-description,
+    .footer-title  {
+        font-size: 12px;
+    }
+
+    .footer-links li {
+        margin-bottom: 1px;
+    }
+    .footer-made-with,
+    .footer-links a,
+    .footer-copyright {
+        font-size: 10px;
+    }
+
+}

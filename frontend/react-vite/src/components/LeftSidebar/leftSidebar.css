@@ -1,0 +1,188 @@
+.left-sidebar {
+    background: #fcfaff;
+    color: #272727;
+    padding: 0;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    width: 190px;
+}
+  
+.left-sidebar.mobile-open {
+    left: 0;
+}
+
+
+
+.sidebar-header {
+    padding: 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.sidebar-header h2 {
+    font-size: 18px;
+    color: #1C4DFF;
+    font-weight: 700;
+}
+
+.sidebar-nav {
+padding: 10px 0;
+}
+
+.nav-list {
+list-style: none;
+}
+
+.nav-item {
+margin-bottom: 5px;
+}
+
+.nav-link {
+    color: #282727;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    padding: 8px 10px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    border-left: 3px solid transparent;
+}
+
+.nav-link:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #1C4DFF;
+    border-left-color: #282727;
+}
+
+.nav-link.active {
+    background: rgba(255, 255, 255, 0.15);
+    color: #1C4DFF;
+    border-left-color: #1C4DFF;
+}
+
+/* Button-like styling for auth actions */
+.sidebar-btn {
+  color: #282727;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  padding: 8px 10px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  border-left: 3px solid transparent;
+}
+
+.sidebar-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #1C4DFF;
+  border-left-color: #282727;
+}
+.nav-link.active {
+  background: rgba(255, 255, 255, 0.15);
+  color: #1C4DFF;
+  border-left-color: #1C4DFF;
+}
+/* Стили для кнопки "Выйти" */
+.nav-logout {
+    background: none;
+    border: none;
+    width: 100%;
+    text-align: left;
+    cursor: pointer;
+}
+
+.nav-logout:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #1C4DFF;
+    border-left-color: #282727;
+}
+
+/* Стили для счетчика уведомлений */
+.notification-badge {
+    background: #ff4757;
+    color: white;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 10px;
+    margin-left: auto;
+    min-width: 18px;
+    text-align: center;
+    line-height: 1.2;
+}
+
+.nav-icon {
+    margin-right: 12px;
+    font-size: 16px;
+    width: 20px;
+    text-align: center;
+}
+
+.mobile-close-btn {
+    display: none;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 5px;
+    margin-left: auto;
+}
+
+/* Мобильные стили */
+@media (max-width: 768px) {
+  .left-sidebar {
+    position: fixed;
+    top: 0;
+    left: -190px;
+    width: 190px;
+    height: 100vh;
+    z-index: 1000;
+    transition: left 0.3s ease;
+    box-shadow: 2px 0 20px rgba(0, 0, 0, 0.3);
+  }
+  
+  .left-sidebar.mobile-open {
+    left: 0;
+  }
+  
+  .mobile-close-btn {
+    display: block;
+  }
+}
+
+@media (max-width: 480px) {
+  .left-sidebar {
+    width: 60vw;
+    left: -100%;
+  }
+  
+  .left-sidebar.mobile-open {
+    left: 0;
+  }
+  
+  .sidebar-header {
+    padding: 15px;
+  }
+  
+  .sidebar-header h2 {
+    font-size: 16px;
+  }
+  
+  .nav-link {
+    padding: 15px 20px;
+    font-size: 16px;
+  }
+  
+  .nav-icon {
+    font-size: 18px;
+    width: 24px;
+  }
+}
+
+

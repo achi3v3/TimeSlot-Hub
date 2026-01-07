@@ -1,0 +1,456 @@
+/* Основная структура */
+.notifications-root {
+  display: flex;
+}
+
+.notifications-main-content {
+  flex: 1;
+  background: #f8f9fa;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+.notifications-container {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Заголовок */
+.notifications-header {
+  background: linear-gradient(135deg, #667eea 0%, #90a8ff 100%);
+  color: #fff;
+  padding: 12px 40px;
+  text-align: left;
+}
+
+.notifications-title {
+  font-size: 1.2rem;
+  font-weight: 00;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.notifications-stats {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 8px;
+}
+
+.notifications-count {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.9rem;
+}
+
+.notifications-count strong {
+  color: #fff;
+  font-weight: 700;
+}
+
+/* Действия */
+.notifications-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 2vh;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.btn-mark-all,
+.btn-refresh,
+.btn-retry {
+  padding: 0.75rem 1rem;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  font-size: 0.875rem;
+}
+
+.btn-mark-all {
+  background: #1C4DFF;
+  color: white;
+}
+
+.btn-mark-all:hover:not(:disabled) { background: #1640e6; }
+
+.btn-mark-all:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.btn-refresh {
+  background: #f4f3f7;
+  color: #333;
+  border: 1px solid #e6e3f1;
+}
+
+.btn-refresh:hover:not(:disabled) { background: #e6e3f1; }
+
+.btn-retry {
+  background: #ff5757;
+  color: white;
+}
+
+.btn-retry:hover { background: #ff4444; }
+
+/* Основной контент */
+.notifications-content {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  overflow: hidden;
+  min-height: 400px;
+}
+
+/* Пустое состояние */
+.notifications-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 20px;
+  text-align: center;
+  color: #666;
+}
+
+.empty-icon {
+  
+  font-size: 3rem;
+  margin-bottom: 16px;
+  opacity: 0.5;
+}
+
+.notifications-empty h3 {
+  margin: 0 0 8px 0;
+  color: #333;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.notifications-empty p {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  max-width: 400px;
+}
+
+/* Список уведомлений */
+.notifications-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+/* Секции (новые/прочитанные) */
+.notifications-section {
+  padding: 24px;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid #f4f3f7;
+}
+
+.section-title {
+  margin: 0;
+  color: #282727;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.section-count {
+  background: #1C4DFF;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 16px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* Разделитель */
+.notifications-divider {
+  display: flex;
+  align-items: center;
+  margin: 0 24px;
+  text-align: center;
+  padding: 16px 0;
+}
+
+.notifications-divider::before,
+.notifications-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: #e6e3f1;
+}
+
+.notifications-divider span {
+  padding: 0 16px;
+  color: #666;
+  font-size: 14px;
+  font-weight: 500;
+  background: #fff;
+}
+
+/* Элементы уведомлений */
+.notification-item {
+  display: flex;
+  gap: 16px;
+  background: #fff;
+  border-radius: 10px;
+  padding: 1rem;
+  margin-bottom: 12px;
+  border: 1px solid #e6e3f1;
+  position: relative;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+
+.notification-item:hover { background: #f9f9ff; }
+
+/* Непрочитанные уведомления */
+.notification-item.unread { border-left: 4px solid #1C4DFF; }
+
+.notification-indicator {
+  width: 8px;
+  height: 8px;
+  background: #1C4DFF;
+  border-radius: 50%;
+  margin-top: 6px;
+  flex-shrink: 0;
+  box-shadow: 0 0 8px rgba(28, 77, 255, 0.5);
+}
+
+/* Прочитанные уведомления */
+.notification-item.read {
+  opacity: 0.8;
+  border-left: 4px solid #ccc;
+}
+
+.notification-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.notification-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.notification-title {
+  margin: 0;
+  color: #282727;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.3;
+  flex: 1;
+}
+
+.notification-time {
+  color: #666;
+  font-size: 0.75rem;
+  white-space: nowrap;
+  margin-top: 2px;
+  background: #f6f7fb;
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+
+.notification-message {
+  margin: 0;
+  color: #555;
+  font-weight: 500;
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+/* Кнопки действий */
+.btn-mark-read {
+  align-self: flex-start;
+  padding: 0.5rem 0.75rem;
+  background: #1C4DFF;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.btn-mark-read:hover:not(:disabled) { background: #1640e6; }
+
+.btn-mark-read:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.notification-read-mark {
+  color: #28a745;
+  font-size: 12px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(40, 167, 69, 0.1);
+  padding: 4px 8px;
+  border-radius: 6px;
+  align-self: flex-start;
+}
+
+/* Состояния загрузки и ошибок */
+.notifications-loading,
+.notifications-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 20px;
+  text-align: center;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.notifications-loading {
+  color: #666;
+  font-size: 16px;
+}
+
+.notifications-error {
+  color: #dc2626;
+}
+
+.notifications-error h3 {
+  margin: 0 0 16px 0;
+  color: #dc2626;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.notifications-error p {
+  margin: 0 0 16px 0;
+  color: #666;
+  font-size: 14px;
+}
+
+/* Адаптивность */
+@media (max-width: 960px) {
+  .notifications-container {
+    padding: 16px;
+  }
+  
+  .notifications-header {
+    padding: 24px 20px;
+  }
+  
+  .notifications-title {
+    font-size: 1.2rem;
+  }
+  
+  .notifications-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .btn-mark-all,
+  .btn-refresh {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .notification-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+  
+  .section-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+}
+
+@media (max-width: 768px) {
+  .notifications-container {
+    padding: 12px;
+  }
+  
+  .notifications-header {
+    padding: 20px 16px;
+  }
+  
+  .notifications-title {
+    font-size: 1.2rem;
+  }
+  
+  .notifications-section {
+    padding: 16px;
+  }
+  
+  .notification-item {
+    padding: 12px;
+    gap: 12px;
+  }
+  
+  .notification-indicator {
+    margin-top: 4px;
+  }
+  
+  .notifications-empty {
+    padding: 60px 16px;
+  }
+  
+  .empty-icon {
+    font-size: 3rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .notifications-container {
+    padding: 8px;
+  }
+  
+  .notifications-header {
+    padding: 16px 12px;
+  }
+  
+  .notifications-title {
+    font-size: 1.2rem;
+  }
+  
+  .notifications-section {
+    padding: 12px;
+  }
+  
+  .notification-item {
+    padding: 10px;
+    gap: 10px;
+  }
+  
+  .notification-title {
+    font-size: 1rem;
+  }
+  
+  .notification-message {
+    font-size: 0.8rem;
+  }
+}

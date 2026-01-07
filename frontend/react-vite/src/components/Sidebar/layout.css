@@ -1,0 +1,93 @@
+/* Общие стили для всех страниц с боковой панелью */
+
+/* Корневые контейнеры для всех страниц */
+.home-root,
+.profile-root,
+.master-public-root,
+.login-root,
+.wait-access-root,
+.notifications-root {
+  background: #fff;
+  min-height: 100vh;
+  display: flex;
+}
+
+/* Основной контент для всех страниц */
+.home-main-content,
+.profile-main-content,
+.master-public-main-content,
+.login-main-content,
+.wait-access-main-content,
+.notifications-main-content {
+  flex: 1;
+  min-height: 100vh;
+  transition: margin-left 0.3s ease;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+/* Адаптивные стили для разных размеров экрана */
+@media (max-width: 1024px) {
+  .home-main-content,
+  .profile-main-content,
+  .master-public-main-content,
+  .login-main-content,
+  .wait-access-main-content,
+  .notifications-main-content {
+    margin-left: 240px;
+  }
+}
+
+@media (max-width: 768px) {
+  .home-main-content,
+  .profile-main-content,
+  .master-public-main-content,
+  .login-main-content,
+  .wait-access-main-content,
+  .notifications-main-content {
+    margin-left: 200px;
+  }
+}
+
+@media (max-width: 600px) {
+  .home-main-content,
+  .profile-main-content,
+  .master-public-main-content,
+  .login-main-content,
+  .wait-access-main-content,
+  .notifications-main-content {
+    margin-left: 0;
+    padding-top: 74px; /* Отступ для кнопки-гамбургера */
+  }
+}
+
+/* Дополнительные стили для страниц с особыми требованиями */
+.profile-main-content,
+.master-public-main-content {
+  background: #fff;
+}
+
+.login-main-content,
+.wait-access-main-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+}
+
+/* Убираем отступы сверху, которые были для старого хедера */
+.profile-section,
+.mp-main {
+  padding-top: 20px;
+}
+
+/* Обеспечиваем правильное позиционирование модальных окон */
+.profile-modal-backdrop,
+.mp-modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2000; /* Выше боковой панели */
+}

@@ -1,0 +1,966 @@
+.user-detail-drawer {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  max-height: 60vh;
+  background: #fff;
+  border-top: 1px solid #e5e7eb;
+  box-shadow: 0 -8px 24px rgba(0,0,0,0.08);
+  padding: 16px;
+  overflow-y: auto;
+  z-index: 1000;
+}
+
+/* Прокрутка страницы при открытии деталей */
+body.detail-open {
+  padding-bottom: 60vh;
+  overflow-x: hidden;
+}
+
+/* Стили для модальных окон (скопированы из ProfilePage) */
+.admin-modal-backdrop { 
+  position: fixed; 
+  inset: 0; 
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+  background: rgba(0,0,0,.35); 
+  padding: 16px; 
+  z-index: 10000;
+}
+
+.admin-modal { 
+  background: #fff; 
+  padding: 30px; 
+  width: 420px; 
+  max-width: 92vw; 
+  max-height: 88vh; 
+  overflow: auto; 
+  box-shadow: 0 4px 24px rgba(0,0,0,.2); 
+} */
+
+.admin-modal-title { 
+  font-weight: 700; 
+  font-size: 20px; 
+  margin-bottom: 4px; 
+  color: #181818; 
+}
+
+.admin-modal-sub { 
+  font-size: 14px; 
+  margin: 20px 2% 4px 0%; 
+  color: #474747;
+}
+
+.admin-modal-actions { 
+  display: flex; 
+  gap: 10px; 
+  justify-content: flex-end; 
+  margin-top: 8px; 
+}
+
+.btn-primary {
+  background: #1C4DFF;
+  color: white;
+  border: none;
+  padding: 8px 24px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 12px; 
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: #0f3dcc;
+  transform: translateY(-1px);
+}
+
+.btn-primary:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-danger {
+  background: #e53e3e;
+  color: white;
+  font-size: 12px; 
+  border: none;
+  padding: 8px 24px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.btn-danger:hover {
+  background: #c53030;
+  transform: translateY(-1px);
+}
+
+/* Стили для таблиц в деталях пользователя */
+.user-slots-table-container,
+.user-services-table-container,
+.user-records-table-container {
+  background: white;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  margin-top: 16px;
+}
+
+.user-slots-table,
+.user-services-table,
+.user-records-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.user-slots-table th,
+.user-slots-table td,
+.user-services-table th,
+.user-services-table td,
+.user-records-table th,
+.user-records-table td {
+  padding: 10px;
+  border-bottom: 1px solid #e2e8f0;
+  font-size: 12px;
+  font-weight: 550;
+  color: #474747;
+}
+
+.user-slots-table th,
+.user-services-table th,
+.user-records-table th {
+  background: #eef1ff;
+  color: #282727;
+  font-weight: 600;
+  padding: 16px;
+  text-align: left;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.user-slots-table tr,
+.user-services-table tr,
+.user-records-table tr {
+  font-size: 14px;
+}
+
+.user-slots-table tr:hover,
+.user-services-table tr:hover,
+.user-records-table tr:hover {
+  background: #f7fafc;
+}
+
+/* Стили для компактной основной информации */
+.compact-card {
+  padding: 16px !important;
+}
+
+.detail-item-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.detail-item-row:last-child {
+  border-bottom: none;
+}
+
+.detail-label {
+  font-weight: 600;
+  color: #374151;
+  min-width: 120px;
+}
+
+.detail-value {
+  color: #6b7280;
+  text-align: right;
+  word-break: break-all;
+  max-width: 200px;
+  font-weight: 600;
+}
+
+.detail-value-with-copy {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.detail-value-with-action {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.copy-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 4px;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.copy-button:hover {
+  background-color: #f3f4f6;
+}
+
+.action-button {
+  background: #1C4DFF;
+  color: white;
+  border: none;
+  padding: 6px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s;
+  min-width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.action-button:hover {
+  background: #0f3dcc;
+  transform: translateY(-1px);
+}
+
+.roles-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  max-width: 200px;
+  justify-content: flex-end;
+}
+
+.role-badge {
+  display: inline-flex;
+  align-items: center;
+  background: #e3f2fd;
+  color: #1976d2;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  gap: 4px;
+}
+
+.role-remove-button {
+  background: none;
+  border: none;
+  color: #d32f2f;
+  cursor: pointer;
+  font-size: 12px;
+  padding: 0;
+  margin: 0;
+  line-height: 1;
+}
+
+.role-remove-button:hover {
+  color: #b71c1c;
+}
+
+.no-roles {
+  color: #9ca3af;
+  font-size: 12px;
+}
+
+.danger-card {
+  padding: 16px !important;
+}
+
+.delete-user-button {
+  background: #dc2626;
+  color: white;
+  border: none;
+  padding: 6px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 12px;
+  transition: all 0.2s;
+  width: 100%;
+}
+
+.delete-user-button:hover {
+  background: #b91c1c;
+  transform: translateY(-1px);
+}
+
+.user-detail-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.down-section {
+  padding: 4px 2% 2% 2%;
+  background-color: #fff;
+  
+}
+.down-section h2 {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.slot-item, .records-section .record-item, .services-section .service-item {
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 8px;
+}
+.admin-dashboard {
+  min-height: 100vh;
+  background: #f7fafc;
+  padding: 30px;
+}
+
+.admin-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+  padding: 20px;
+  background: white;
+  /* border-radius: px; */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.header-actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.admin-header h1 {
+  color: #282727;
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.refresh-button {
+  background: #474747;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+.refresh-button:hover {
+  background: #3182ce;
+  transform: translateY(-1px);
+}
+
+.logout-button {
+  background: #e53e3e;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.logout-button:hover {
+  background: #c53030;
+  transform: translateY(-1px);
+}
+
+.loading {
+  text-align: center;
+  font-size: 18px;
+  color: #718096;
+  padding: 40px;
+}
+
+.error-message {
+  background: #ff4545;
+  color: #fff;
+  padding: 16px;
+  border-radius: 8px;
+  margin-bottom: 24px;
+  font-weight: 600;
+}
+
+/* Статистика */
+.stats-section {
+  margin-bottom: 32px;
+  background-color: #fff;
+  padding: 4px 2% 2% 2%;
+}
+
+.stats-section h2 {
+  color: #282727;
+  margin-bottom: 20px;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 20px;
+}
+
+
+@media (max-width: 480px) {
+  .stats-grid {
+    grid-template-columns: repeat(auto-fit, 1fr);
+    gap: 8px;
+  }
+  
+  .admin-dashboard {
+    padding: 8px;
+  }
+  
+  .admin-header {
+    padding: 12px;
+  }
+  
+  .admin-header h1 {
+    font-size: 1rem;
+  }
+  
+  .users-table th,
+  .users-table td {
+    padding: 8px 4px;
+    font-size: 10px;
+  }
+  
+  .detail-button {
+    padding: 6px 8px;
+    font-size: 10px;
+  }
+}
+
+.stat-card {
+  background: white;
+  padding: 20px;
+  max-width: 180px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  transition: transform 0.2s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  border: 1.5px solid transparent;
+}
+
+.stat-card:hover {
+  transform: translateY(-2px);
+  border-color: #667eea;
+  box-shadow: 0 10px 30px rgba(102, 126, 234, 0.1);
+}
+
+.stat-number {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1C4DFF;
+  margin-bottom: 8px;
+}
+
+.stat-label {
+  color: #474747;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+/* Пользователи */
+.users-section {
+  margin-bottom: 32px;
+  background-color: #fff;
+  padding: 4px 2% 2% 2%;
+
+}
+
+.users-section h2 {
+  color: #474747;
+  margin-bottom: 20px;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.users-table-container {
+  background: white;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+/* Базовые стили для таблиц слотов, услуг и записей */
+.slots-table-container,
+.services-table-container,
+.records-table-container {
+  background: white;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.slots-table,
+.services-table,
+.records-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.slots-table th,
+.services-table th,
+.records-table th {
+  background: #eef1ff;
+  color: #282727;
+  font-weight: 600;
+  padding: 16px;
+  text-align: left;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.slots-table td,
+.services-table td,
+.records-table td {
+  padding: 10px;
+  border-bottom: 1px solid #e2e8f0;
+  font-size: 12px;
+  font-weight: 550;
+  color: #474747;
+}
+
+.slots-table tr,
+.services-table tr,
+.records-table tr {
+  font-size: 14px;
+}
+
+.slots-table tr:hover,
+.services-table tr:hover,
+.records-table tr:hover {
+  background: #f7fafc;
+}
+.users-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.users-table th {
+  background: #eef1ff;
+  color: #282727;
+  font-weight: 600;
+  padding: 16px;
+  text-align: left;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.users-table td {
+  padding: 10px;
+  border-bottom: 1px solid #e2e8f0;
+  font-size: 12px;
+  font-weight: 550;
+  color: #474747;
+}
+.users-table tr {
+  font-size: 14px;
+}
+.users-table tr:hover {
+  background: #f7fafc;
+}
+
+.status-badge {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.status-badge.active {
+  background: #c6f6d5;
+  color: #22543d;
+}
+
+.status-badge.inactive {
+  background: #fed7d7;
+  color: #c53030;
+}
+
+.detail-button {
+  background: #474747;
+  color: white;
+  border: 1px solid transparent;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size:12px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.detail-button:hover {
+  background: white;
+  color: #282727;
+  border: 1px solid;
+  transform: translateY(-1px);
+}
+
+/* Пагинация */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  margin-top: 20px;
+  padding: 20px;
+}
+.page-button {
+  background: #474747;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+.page-button:hover:not(:disabled) {
+  background: #bcbcbc;
+  transform: translateY(-1px);
+}
+
+.page-button:disabled {
+  background: #e2e8f0;
+  color: #a0aec0;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.page-info {
+  color: #718096;
+  font-weight: 500;
+}
+
+/* Детали пользователя */
+.user-detail-section {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 24px;
+  margin-bottom: 32px;
+}
+
+.user-detail-section h2 {
+  color: #2d3748;
+  margin-bottom: 24px;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.user-detail-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+/* Responsive дизайн для деталей */
+@media (max-width: 1200px) {
+  .user-detail-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.detail-card {
+  background: #f7fafc;
+  padding: 20px;
+  border: 1px solid #e2e8f0;
+  max-height: 100vh;
+}
+
+.detail-card h3 {
+  color: #2d3748;
+  margin-bottom: 16px;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.detail-item {
+  margin-bottom: 12px;
+  font-size: 14px;
+  color: #4a5568;
+}
+
+.detail-item strong {
+  color: #2d3748;
+  margin-right: 8px;
+}
+
+/* Списки */
+.slots-list,
+.services-list,
+.records-list {
+  min-height: 400px;
+  overflow-y: auto;
+  background-color: #fff;
+}
+
+.slot-item,
+.service-item,
+.record-item {
+  background: white;
+  padding: 12px;
+  border-radius: 6px;
+  margin-bottom: 8px;
+  font-size: 14px;
+  border: 1px solid #e2e8f0;
+}
+
+.slot-status {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin-top: 4px;
+  display: inline-block;
+}
+
+.slot-status.booked {
+  background: #fed7d7;
+  color: #c53030;
+}
+
+.slot-status.available {
+  background: #c6f6d5;
+  color: #22543d;
+}
+
+.service-name {
+  font-weight: 600;
+  color: #2d3748;
+  margin-bottom: 4px;
+}
+
+.service-price {
+  color: #667eea;
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+.service-duration {
+  color: #718096;
+  font-size: 12px;
+}
+
+.record-status {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin-top: 4px;
+  display: inline-block;
+}
+
+.record-status.confirm {
+  background: #c6f6d5;
+  color: #22543d;
+}
+
+.record-status.pending {
+  background: #fef5e7;
+  color: #c05621;
+}
+
+.record-status.reject {
+  background: #fed7d7;
+  color: #c53030;
+}
+
+.more-items {
+  text-align: center;
+  color: #718096;
+  font-style: italic;
+  padding: 8px;
+}
+
+.no-data {
+  text-align: center;
+  color: #a0aec0;
+  font-style: italic;
+  padding: 20px;
+}
+
+.close-detail-button {
+  background: #e53e3e;
+  color: white;
+  border: none;
+  padding: 0.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  width: 12rem;
+  transition: all 0.2s ease;
+}
+
+.close-detail-button:hover {
+  background: #c53030;
+  transform: translateY(-1px);
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .detail-button {
+    padding: 8px 10px;
+    font-size: 11px;
+    margin: 2px;
+  }
+  
+  .error-message {
+    font-size: 12px;
+    padding: 10px;
+  }
+  .users-table-container {
+    overflow-x: visible;
+    border-radius: 8px;
+  }
+  .users-table {
+    min-width: auto;
+    width: 100%;
+  }
+  .users-table th,
+  .users-table td {
+    padding: 12px 8px;
+    font-size: 12px;
+  }
+  .stats-grid {
+    grid-template-columns: repeat(auto-fit, 1fr);
+    gap: 8px;
+  }
+  .stat-card {
+    padding: 16px;
+  }
+  .stat-card h3 {
+    font-size: 1rem;
+  }
+  .stat-number {
+    font-size: 1rem;
+  }
+  .refresh-button {
+    padding: 6px 16px;
+    font-size: 12px;
+    width: 100%;
+  }
+  .admin-header {
+    flex-direction: column;
+    gap: 16px;
+    padding: 16px;
+    margin-bottom: 20px;
+  }
+  .admin-header h1 {
+    font-size: 1rem;
+    text-align: center;
+  }
+  .admin-dashboard {
+    padding: 10px;
+  }
+  .user-detail-drawer {
+    max-height: 60vh;
+    padding: 12px;
+  }
+  .admin-header {
+    flex-direction: column;
+    gap: 16px;
+    text-align: center;
+  }
+  .danger-card {
+    padding: 16px;
+  }
+  
+  .detail-card h3 {
+    font-size: 1.1rem;
+  }
+  .user-detail-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+  .page-button {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+  .pagination {
+    gap: 8px;
+    padding: 16px;
+    flex-wrap: wrap;
+  }
+  
+  .page-info {
+    font-size: 12px;
+  }
+  
+  /* Скрытие лишних колонок в таблице пользователей на экранах 768px и меньше */
+  .users-table th:nth-child(3),
+  .users-table td:nth-child(3),
+  .users-table th:nth-child(4),
+  .users-table td:nth-child(4),
+  .users-table th:nth-child(5),
+  .users-table td:nth-child(5),
+  .users-table th:nth-child(6),
+  .users-table td:nth-child(6) {
+    display: none;
+  }
+
+
+  /* Адаптивность для таблиц слотов, услуг и записей на экранах 768px и меньше */
+  .slots-table th:nth-child(3),
+  .slots-table td:nth-child(3),
+  .services-table th:nth-child(3),
+  .services-table td:nth-child(3),
+  .records-table th:nth-child(3),
+  .records-table td:nth-child(3) {
+    display: none;
+  }
+}
+
+/* --- sortable headers --- */
+.table-sortable th,
+.users-table th,
+.slots-table th,
+.services-table th,
+.records-table th {
+  user-select: none;
+}
+
+.sortable {
+  cursor: pointer;
+  position: relative;
+  transition: background-color 0.2s ease;
+}
+
+.sortable:hover {
+  background-color: rgba(28, 77, 255, 0.06);
+}
+
+/* Indicator */
+.sortable.active::after {
+  content: '\25B2'; /* ▲ */
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 10px;
+  color: #1C4DFF;
+}
+.sortable.active.desc::after {
+  content: '\25BC'; /* ▼ */
+}

@@ -1,0 +1,106 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    platform: linux/amd64
+    container_name: postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: melot_user
+      POSTGRES_PASSWORD: your_password
+      POSTGRES_DB: melot_db
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "127.0.0.1:5433:5432"
+    networks:
+      - app-net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U melot_user -d melot_db"]
+      interval: 5s
+      timeout: 10s
+      retries: 20
+      start_period: 30s
+
+  app:
+    build:
+      context: ./backend/app
+      dockerfile: Dockerfile
+    container_name: app
+    restart: unless-stopped
+    ports:
+      - "8090:8090"
+    volumes:
+      - ./backend/app/.env:/app/.env:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DB_HOST: postgres
+      DB_PORT: "5432"
+      DB_USER: melot_user
+      DB_PASSWORD: your_password
+      DB_NAME: melot_db
+      INTERNAL_TOKEN: your_internal_token
+      FRONTEND_SECRET: your_frontend_secret
+      ALLOWED_ORIGINS: http://localhost:3000,http://localhost:5173
+      TELEGRAM_HTTP_BASE: http://telegram:8091
+    expose:
+      - "8090"
+    networks:
+      - app-net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8090/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+
+  telegram:
+    build:
+      context: ./backend/telegram
+      dockerfile: Dockerfile
+    container_name: telegram
+    restart: unless-stopped
+    ports:
+      - "8091:8091"
+    volumes:
+      - ./backend/telegram/.env:/telegram/.env:ro
+    depends_on:
+      app:
+        condition: service_started
+    networks:
+      - app-net
+    environment:
+      BACKEND_BASE_URL: http://app:8090
+      INTERNAL_TOKEN: your_internal_token
+      TELEGRAM_HTTP_SECRET: your_internal_token
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8091/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+
+  frontend:
+    build:
+      context: ./frontend/react-vite
+      dockerfile: Dockerfile
+    container_name: frontend
+    restart: unless-stopped
+    ports:
+      - "3000:80"
+    environment:
+      VITE_API_URL: http://localhost:8090/api
+      VITE_PUBLIC_SITE_URL: http://localhost:3000
+    depends_on:
+      app:
+        condition: service_started
+    networks:
+      - app-net
+    expose:
+      - "80"
+
+volumes:
+  pgdata:
+
+networks:
+  app-net:
+    driver: bridge
