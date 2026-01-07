@@ -1,0 +1,1845 @@
+definitions:
+  admin.AdminLoginRequest:
+    properties:
+      password:
+        type: string
+    required:
+    - password
+    type: object
+  admin.AdminLoginResponse:
+    properties:
+      message:
+        type: string
+      success:
+        type: boolean
+    type: object
+  admin.AdminStatsResponse:
+    properties:
+      active_users:
+        type: integer
+      ad_clicks_1:
+        type: integer
+      ad_clicks_2:
+        type: integer
+      booked_slots:
+        type: integer
+      confirmed_records:
+        type: integer
+      pending_records:
+        type: integer
+      rejected_records:
+        type: integer
+      total_records:
+        type: integer
+      total_services:
+        type: integer
+      total_slots:
+        type: integer
+      total_users:
+        type: integer
+    type: object
+  admin.UserDetailResponse:
+    properties:
+      records:
+        items:
+          $ref: '#/definitions/models.Record'
+        type: array
+      services:
+        items:
+          $ref: '#/definitions/models.Service'
+        type: array
+      slots:
+        items:
+          $ref: '#/definitions/models.Slot'
+        type: array
+      user:
+        $ref: '#/definitions/admin.UserInfo'
+    type: object
+  admin.UserInfo:
+    properties:
+      created_at:
+        type: string
+      first_name:
+        type: string
+      id:
+        type: string
+      is_active:
+        type: boolean
+      phone:
+        type: string
+      roles:
+        items:
+          type: string
+        type: array
+      surname:
+        type: string
+      telegram_id:
+        type: integer
+    type: object
+  admin.UserListResponse:
+    properties:
+      limit:
+        type: integer
+      page:
+        type: integer
+      total:
+        type: integer
+      users:
+        items:
+          $ref: '#/definitions/admin.UserInfo'
+        type: array
+    type: object
+  metrics.clickReq:
+    properties:
+      slot:
+        type: integer
+    type: object
+  models.Record:
+    properties:
+      client:
+        $ref: '#/definitions/models.User'
+      client_id:
+        type: string
+      created_at:
+        type: string
+      id:
+        type: integer
+      slot:
+        allOf:
+        - $ref: '#/definitions/models.Slot'
+        description: Expose slot in JSON so Telegram can render date/time/service/master
+      slot_id:
+        type: integer
+      status:
+        type: string
+    type: object
+  models.Service:
+    properties:
+      description:
+        type: string
+      duration:
+        type: integer
+      id:
+        type: integer
+      master_id:
+        type: string
+      name:
+        type: string
+      price:
+        type: number
+    type: object
+  models.Slot:
+    properties:
+      end_time:
+        type: string
+      id:
+        type: integer
+      is_booked:
+        type: boolean
+      master:
+        $ref: '#/definitions/models.User'
+      master_id:
+        type: string
+      service:
+        $ref: '#/definitions/models.Service'
+      service_id:
+        type: integer
+      start_time:
+        type: string
+    type: object
+  models.User:
+    properties:
+      active:
+        type: boolean
+      consent_given_at:
+        type: string
+      first_name:
+        type: string
+      id:
+        type: string
+      phone:
+        type: string
+      privacy_policy_accepted_at:
+        type: string
+      roles:
+        items:
+          $ref: '#/definitions/models.UserRole'
+        type: array
+      services:
+        items:
+          $ref: '#/definitions/models.Service'
+        type: array
+      surname:
+        type: string
+      telegram_id:
+        type: integer
+      terms_accepted_at:
+        type: string
+      timezone:
+        type: string
+    type: object
+  models.UserRole:
+    properties:
+      role:
+        type: string
+      user_id:
+        type: string
+    type: object
+  user.PublicUserResponse:
+    properties:
+      first_name:
+        type: string
+      id:
+        type: string
+      services:
+        items:
+          $ref: '#/definitions/models.Service'
+        type: array
+      surname:
+        type: string
+    type: object
+  user.UserSageRegister:
+    properties:
+      first_name:
+        type: string
+      phone:
+        type: string
+      surname:
+        type: string
+      telegram_id:
+        type: integer
+    type: object
+info:
+  contact: {}
+paths:
+  /admin/login:
+    post:
+      consumes:
+      - application/json
+      description: Authenticate admin user with password
+      parameters:
+      - description: Admin login credentials
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/admin.AdminLoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/admin.AdminLoginResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Admin login
+      tags:
+      - admin
+  /admin/record/{id}:
+    get:
+      description: Get detailed information about a record
+      parameters:
+      - description: Record ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Record'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get record details
+      tags:
+      - admin
+  /admin/records:
+    get:
+      description: Get all records (admin)
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get all records
+      tags:
+      - admin
+  /admin/roles:
+    delete:
+      consumes:
+      - application/json
+      description: Delete role from user
+      parameters:
+      - description: Role data
+        in: body
+        name: role
+        required: true
+        schema:
+          $ref: '#/definitions/models.UserRole'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Delete role
+      tags:
+      - role
+    get:
+      description: Get all roles
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get all roles
+      tags:
+      - role
+    post:
+      consumes:
+      - application/json
+      description: Create role for user
+      parameters:
+      - description: Role data
+        in: body
+        name: role
+        required: true
+        schema:
+          $ref: '#/definitions/models.UserRole'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Create role
+      tags:
+      - role
+  /admin/service/{id}:
+    get:
+      description: Get detailed information about a service
+      parameters:
+      - description: Service ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Service'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get service details
+      tags:
+      - admin
+  /admin/services:
+    get:
+      description: Get all services (admin)
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get all services
+      tags:
+      - admin
+  /admin/slot/{id}:
+    delete:
+      description: Delete slot by ID
+      parameters:
+      - description: Slot ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Delete slot
+      tags:
+      - admin
+    get:
+      description: Get detailed information about a slot
+      parameters:
+      - description: Slot ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Slot'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get slot details
+      tags:
+      - admin
+  /admin/slots:
+    get:
+      description: Get all slots with masters (admin)
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get all slots
+      tags:
+      - admin
+  /admin/stats:
+    get:
+      description: Get overall statistics including users, slots, records, and services
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/admin.AdminStatsResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get system statistics
+      tags:
+      - admin
+  /admin/user/{id}:
+    delete:
+      description: Delete user by ID
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Delete user
+      tags:
+      - admin
+    get:
+      description: Get detailed information about user including slots, services,
+        and records
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/admin.UserDetailResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get user details
+      tags:
+      - admin
+  /admin/user/{id}/toggle-active:
+    put:
+      description: Toggle user active/inactive status
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Toggle user active status
+      tags:
+      - admin
+  /admin/users:
+    get:
+      description: Get paginated list of all users
+      parameters:
+      - default: 1
+        description: Page number
+        in: query
+        name: page
+        type: integer
+      - default: 10
+        description: Items per page
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/admin.UserListResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get users list
+      tags:
+      - admin
+  /admin/users/{id}/roles:
+    get:
+      description: Get roles for user by ID
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get user roles
+      tags:
+      - role
+  /admin/users/{id}/roles/{role}:
+    get:
+      description: Check if user has specific role
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Role name
+        in: path
+        name: role
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Check user role
+      tags:
+      - role
+  /metrics/ad-click:
+    post:
+      consumes:
+      - application/json
+      description: Track advertisement click for slot (1 or 2)
+      parameters:
+      - description: Slot click payload
+        in: body
+        name: slot
+        schema:
+          $ref: '#/definitions/metrics.clickReq'
+      - description: Slot via query param
+        in: query
+        name: slot
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Track ad click
+      tags:
+      - metrics
+  /notification/:
+    get:
+      description: Get notifications for authenticated user
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get notifications
+      tags:
+      - notification
+  /notification/{id}/mark-read:
+    post:
+      description: Mark specific notification as read
+      parameters:
+      - description: Notification ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Mark notification read
+      tags:
+      - notification
+  /notification/mark-all-read:
+    post:
+      description: Mark all notifications as read for current user
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Mark all notifications read
+      tags:
+      - notification
+  /notification/unread-count:
+    get:
+      description: Count unread notifications for current user
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Count unread notifications
+      tags:
+      - notification
+  /record/{uuid}:
+    get:
+      description: Get all records for a client by UUID
+      parameters:
+      - description: Client UUID
+        in: path
+        name: uuid
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get client records
+      tags:
+      - record
+  /record/master/{record_id}:
+    delete:
+      description: Delete record by id
+      parameters:
+      - description: Record ID
+        in: path
+        name: record_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Delete record
+      tags:
+      - record
+  /record/master/{slot_id}:
+    get:
+      description: Get all records for slot by slot_id
+      parameters:
+      - description: Slot ID
+        in: path
+        name: slot_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get records by slot (admin)
+      tags:
+      - record
+  /record/master/confirm/{record_id}:
+    post:
+      description: Confirm record by id
+      parameters:
+      - description: Record ID
+        in: path
+        name: record_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Confirm record
+      tags:
+      - record
+  /record/master/create:
+    post:
+      consumes:
+      - application/json
+      description: Create a new booking record for a slot
+      parameters:
+      - description: Record data
+        in: body
+        name: record
+        required: true
+        schema:
+          $ref: '#/definitions/models.Record'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Create record
+      tags:
+      - record
+  /record/master/get:
+    post:
+      consumes:
+      - application/json
+      description: Get records for a specific slot with optional status filter
+      parameters:
+      - description: Slot and status request
+        in: body
+        name: request
+        required: true
+        schema:
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get records by slot
+      tags:
+      - record
+  /record/master/reject/{record_id}:
+    post:
+      description: Reject record by id
+      parameters:
+      - description: Record ID
+        in: path
+        name: record_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Reject record
+      tags:
+      - record
+  /record/master/status:
+    post:
+      consumes:
+      - application/json
+      description: Update record status by id
+      parameters:
+      - description: Record status update request
+        in: body
+        name: request
+        required: true
+        schema:
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Update record status
+      tags:
+      - record
+  /record/user/filter:
+    post:
+      consumes:
+      - application/json
+      description: Get client records filtered by status with pagination
+      parameters:
+      - description: Filter request
+        in: body
+        name: filter
+        required: true
+        schema:
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get filtered client records
+      tags:
+      - record
+  /service/{id}:
+    delete:
+      description: Delete service by ID (owner check)
+      parameters:
+      - description: Service ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Delete service
+      tags:
+      - service
+    get:
+      description: Get service by ID
+      parameters:
+      - description: Service ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Service'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get service
+      tags:
+      - service
+  /service/create:
+    post:
+      consumes:
+      - application/json
+      description: Create a new service for master
+      parameters:
+      - description: Service data
+        in: body
+        name: service
+        required: true
+        schema:
+          $ref: '#/definitions/models.Service'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Create service
+      tags:
+      - service
+  /service/master/{uuid}:
+    get:
+      description: Get services for master by uuid or telegram_id
+      parameters:
+      - description: Master UUID or telegram_id
+        in: path
+        name: uuid
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Service'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get services
+      tags:
+      - service
+  /service/update:
+    put:
+      consumes:
+      - application/json
+      description: Update service fields
+      parameters:
+      - description: Service update data
+        in: body
+        name: service
+        required: true
+        schema:
+          $ref: '#/definitions/models.Service'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Update service
+      tags:
+      - service
+  /slot/{uuid}:
+    get:
+      description: Get slots by master uuid
+      parameters:
+      - description: Master UUID
+        in: path
+        name: uuid
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Slot'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get slots
+      tags:
+      - slot
+  /slot/master/{uuid}:
+    delete:
+      description: Delete all slots for master uuid
+      parameters:
+      - description: Master UUID
+        in: path
+        name: uuid
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Delete slots by master
+      tags:
+      - slot
+  /slot/master/create:
+    post:
+      consumes:
+      - application/json
+      description: Create a new time slot for master
+      parameters:
+      - description: Slot data
+        in: body
+        name: slot
+        required: true
+        schema:
+          $ref: '#/definitions/models.Slot'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Create slot
+      tags:
+      - slot
+  /slot/master/one/{id}:
+    delete:
+      description: Delete single slot with owner verification
+      parameters:
+      - description: Slot ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Delete slot (owner)
+      tags:
+      - slot
+  /slot/one/{id}:
+    get:
+      description: Get slot by ID
+      parameters:
+      - description: Slot ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Slot'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get slot
+      tags:
+      - slot
+  /telegram/record/master/upcoming/{telegram_id}:
+    get:
+      description: Get upcoming confirmed records for master by telegram_id (internal)
+      parameters:
+      - description: Telegram ID
+        in: path
+        name: telegram_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get upcoming records for master
+      tags:
+      - record
+  /telegram/user/timezone:
+    put:
+      consumes:
+      - application/json
+      description: Update timezone by telegram_id (internal for Telegram bot)
+      parameters:
+      - description: Timezone update internal request
+        in: body
+        name: request
+        required: true
+        schema:
+          additionalProperties:
+            type: string
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Update timezone internal
+      tags:
+      - user
+  /user/check-login/{telegram_id}:
+    get:
+      description: Check if login token is ready for given telegram_id
+      parameters:
+      - description: Telegram ID
+        in: path
+        name: telegram_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Check login status
+      tags:
+      - user
+  /user/check/{telegram_id}:
+    get:
+      description: Check authentication status by telegram_id
+      parameters:
+      - description: Telegram ID
+        in: path
+        name: telegram_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Check auth
+      tags:
+      - user
+  /user/claim-token/{telegram_id}:
+    post:
+      description: Issue session token for user after confirmation (internal)
+      parameters:
+      - description: Telegram ID
+        in: path
+        name: telegram_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Claim token
+      tags:
+      - user
+  /user/confirm-deletion:
+    post:
+      description: Confirm account deletion (internal for Telegram)
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Confirm account deletion
+      tags:
+      - user
+  /user/confirm-login/{telegram_id}:
+    post:
+      description: Confirm login by telegram_id (internal endpoint)
+      parameters:
+      - description: Telegram ID
+        in: path
+        name: telegram_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Confirm login
+      tags:
+      - user
+  /user/g3tter/{telegram_id}:
+    get:
+      description: Get user public data by telegram id (internal)
+      parameters:
+      - description: Telegram ID
+        in: path
+        name: telegram_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/user.PublicUserResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get user by telegram id (internal)
+      tags:
+      - user
+  /user/login:
+    post:
+      consumes:
+      - application/json
+      description: Initiate login process by phone number
+      parameters:
+      - description: Login request
+        in: body
+        name: request
+        required: true
+        schema:
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: User login
+      tags:
+      - user
+  /user/logout:
+    post:
+      description: Logout current session
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Logout
+      tags:
+      - user
+  /user/public/{uuid}:
+    get:
+      description: Get public user info by UUID
+      parameters:
+      - description: User UUID
+        in: path
+        name: uuid
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/user.PublicUserResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get public user
+      tags:
+      - user
+  /user/register:
+    post:
+      consumes:
+      - application/json
+      description: Register a new user with phone and Telegram ID
+      parameters:
+      - description: User registration data
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/user.UserSageRegister'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Create user
+      tags:
+      - user
+  /user/request-deletion:
+    post:
+      description: Request account deletion, sending confirmation to Telegram
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Request account deletion
+      tags:
+      - user
+  /user/timezone:
+    put:
+      consumes:
+      - application/json
+      description: Update timezone for authenticated user
+      parameters:
+      - description: Timezone update request
+        in: body
+        name: request
+        required: true
+        schema:
+          additionalProperties:
+            type: string
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Update timezone
+      tags:
+      - user
+  /user/update:
+    put:
+      consumes:
+      - application/json
+      description: Update first_name and surname for user
+      parameters:
+      - description: User update request
+        in: body
+        name: request
+        required: true
+        schema:
+          additionalProperties:
+            type: string
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Update user names
+      tags:
+      - user
+swagger: "2.0"

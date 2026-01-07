@@ -1,6 +1,4 @@
 # Binaries
-telegram-bot
-app
 *.exe
 *.exe~
 *.dll
