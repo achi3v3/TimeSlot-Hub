@@ -7,41 +7,54 @@ ENV_FILE = .env
 # Commands
 help: ## Show available commands
 	@echo ========================================
-	@echo MELOT PROJECT - DOCKER MANAGEMENT
+	@echo Melot(TimeSlot Hub) project - Management
 	@echo ========================================
 	@echo LAUNCH:
-	@echo   make up               - Start all services (detached)
+	@echo   make up               - Start all services with Docker (detached)
 	@echo   make down             - Stop and remove all services
 	@echo   make restart          - Restart all services
 	@echo   make logs             - Show all logs (follow)
 	@echo ---------------------------------------
 	@echo MONITORING:
-	@echo   make logs-app         - Show backend logs
-	@echo   make logs-bot         - Show telegram bot logs
+	@echo   make logs-app         - Show backend API logs
+	@echo   make logs-bot         - Show Telegram bot logs
 	@echo   make logs-frontend    - Show frontend logs
 	@echo   make logs-postgres    - Show database logs
 	@echo   make ps               - Show container status
+	@echo   make status           - Alias for ps
 	@echo ---------------------------------------
-	@echo DEVELOPMENT:
-	@echo   make build            - Rebuild all images
+	@echo DEVELOPMENT (WITHOUT DOCKER):
+	@echo   make backend-dev      - Start backend in development mode
+	@echo   make frontend-dev     - Start frontend dev server
+	@echo   make telegram-dev     - Start Telegram bot in dev mode
+	@echo   make quick-start      - Quick start for local development
+	@echo ---------------------------------------
+	@echo DEPENDENCIES:
+	@echo   make deps-backend     - Install Go dependencies (app + telegram)
+	@echo   make deps-frontend    - Install Node.js dependencies
+	@echo   make deps-all         - Install all dependencies
+	@echo   make go-mod-init      - Initialize Go modules for both services
+	@echo ---------------------------------------
+	@echo FRONTEND:
+	@echo   make frontend-dev     - Start frontend dev server (port 5173)
+	@echo   make frontend-build   - Build frontend for production
+	@echo   make frontend-preview - Preview production build
+	@echo ---------------------------------------
+	@echo BUILD & DOCKER:
+	@echo   make build            - Rebuild all Docker images
 	@echo   make rebuild          - Full rebuild and restart
-	@echo   make shell            - Enter app container
+	@echo   make shell            - Enter app container (bash)
 	@echo ---------------------------------------
 	@echo CLEANUP:
 	@echo   make clean            - Stop and clean volumes
 	@echo   make clean-images     - Remove all images
 	@echo   make clean-all        - Full system cleanup
 	@echo ========================================
-	@echo @echo DEPENDENCIES:
-	@echo ========================================
-	@echo   make deps-backend    - Install Go dependencies (app + telegram)
-	@echo   make deps-frontend   - Install Node.js dependencies
-	@echo   make deps-all        - Install all dependencies
-	@echo ---------------------------------------
-	@echo FRONTEND:
-	@echo   make frontend-dev    - Start frontend dev server
-	@echo   make frontend-build  - Build frontend for production
-	@echo   make frontend-preview- Preview production build
+	@echo USAGE EXAMPLES:
+	@echo   Full Docker start:     make up
+	@echo   Local dev:             make backend-dev + make frontend-dev
+	@echo   Rebuild everything:    make rebuild
+	@echo   Check logs:            make logs-app
 	@echo ========================================
 
 # Dependencies
@@ -94,11 +107,15 @@ quick-start: deps-all ## Quick start for local development
 	@echo "========================================"
 
 .PHONY: backend-dev
-backend-dev: ## Start backend in development mode
-	@echo "Starting backend in development mode..."
+backend-dev: ## Start backend API in development mode (port 8090)
+	@echo "Starting backend API in development mode..."
 	cd backend/app && go run .
 
-
+.PHONY: telegram-dev
+telegram-dev: ## Start Telegram bot in development mode
+	@echo "Starting Telegram bot in development mode..."
+	cd backend/telegram && go run .
+	
 # Docker
 .PHONY: up
 up: ## Detouched run all services  
