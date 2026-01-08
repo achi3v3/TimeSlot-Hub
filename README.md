@@ -91,68 +91,14 @@
   - Отдельные контроллеры и репозитории для метрик и админ‑панели.
   - Структурированное логирование ключевых событий (старты/остановки сервисов, ошибки, фоновые задачи).
 
----
+#### Дополнительные детали
 
-## Запуск и навигация по проекту
+- Подробная документация по Backend API, структуре слоев и Telegram‑сервису: см. `backend/README.md`.
+- Детали по фронтенду, роутам и интеграции с API: см. `frontend/README.md`.
 
-- **Порты**
+## Как выглядит
 
-  - Backend API: `http://localhost:8090`
-  - Swagger UI: `http://localhost:8090/swagger/index.html#/`
-  - Frontend (Vite dev): `http://localhost:5173`
-  - Dev‑proxy фронта: все запросы на `/user`, `/slot`, `/record` идут на Backend API.
-- **Быстрый локальный старт (для разработки)**
-
-  **Способ 1. Через Docker**
-
-  Клонировать репозиторий
-
-  ```bash
-  git clone https://github.com/yourname/Botans-Portfolio.git
-  cd Botans-Portfolio```
-  ```
-
-  Настроить окружение
-
-  ```bash
-  cp backend/app/.env.example backend/app/.env
-  cp backend/telegram/.env.example backend/telegram/.env
-
-  # отредактируйте .env файлы под вашу конфигурацию
-  ```
-
-  Запустить все сервисы
-
-  ```bash
-  make up
-  ```
-
-  **Способ 2. Без Docker**
-  Установить зависимости
-
-  ```bash
-  make deps-all
-  ```
-
-  Запустить бэкенд
-
-  ```bash
-  make backend-dev
-  ```
-
-  Запустить фронтенд
-
-  ```bash
-  make frontend-dev
-  ```
-
-  Приложение будет доступно на http:localhost:5173
-- **Дополнительные детали**
-
-  - Подробная документация по Backend API, структуре слоев и Telegram‑сервису: см. `backend/README.md`.
-  - Детали по фронтенду, роутам и интеграции с API: см. `frontend/README.md`.
-
-## Веб-интерфейс
+### Веб-интерфейс
 
 |            Вкладка «Главная»            |             Вкладка «Инфо»             |
 | :------------------------------------------------------: | :-------------------------------------------------: |
@@ -162,8 +108,105 @@
 | :----------------------------------------------------------------------: | :------------------------------------------------------------------: |
 | ![Вкладка «Главная»](screenshots/profile_slot_details.jpg) | ![Вкладка «Инфо»](screenshots/profile_create_service.jpg) |
 
-## Интеграция с Telegram-ботом
+### Интеграция с Telegram-ботом
 
 |            Работа со слотами            | **Уведомление о новой записи** |
 | :------------------------------------------------------: | :---------------------------------------------------------: |
 | ![Просмотр слотов](screenshots/my_slots.jpg) |    ![Новая запись](screenshots/new_record.jpg)    |
+
+## Быстрый старт
+
+### Способ 1. Через Docker (рекомендуется для демо)
+
+#### Клонировать репозиторий
+
+```bash
+git clone https://github.com/yourname/TimeSlot-Hub.git
+cd TimeSlot-Hub
+```
+
+#### Настроить окружение
+
+```bash
+cp backend/app/.env.example backend/app/.env
+cp backend/telegram/.env.example backend/telegram/.env
+# отредактируйте .env файлы под вашу конфигурацию
+```
+
+#### Запустить все сервисы
+
+```bash
+make up
+```
+
+#### После запуска:
+
+* **Frontend** : [http://localhost:3000](http://localhost:3000/)
+* **Backend API** : [http://localhost:8090](http://localhost:8090/)
+* **Swagger UI** : [http://localhost:8090/swagger/index.html](http://localhost:8090/swagger/index.html)
+* **Telegram Bot** : работает в фоне (порт 8091)
+
+### Способ 2. Локальная разработка (без Docker)
+
+#### Установить зависимости
+
+```bash
+make deps-all
+```
+
+#### Запустить в трёх терминалах:
+
+**Терминал 1 — Backend API:**
+
+```bash
+make backend-dev
+```
+
+*Сервер будет на [http://localhost:8090](http://localhost:8090/)*
+
+**Терминал 2 — Frontend:**
+
+```bash
+make frontend-dev
+```
+
+*Приложение будет на [http://localhost:5173](http://localhost:5173/)*
+
+**Терминал 3 — Telegram Bot:**
+
+```bash
+make telegram-dev
+```
+
+## Доступные команды Makefile
+
+```bash
+# Полный список команд
+make help
+
+# Основные сценарии использования:
+
+# 1. Запуск через Docker (рекомендуется)
+make up
+
+# 2. Локальная разработка (в разных терминалах)
+make backend-dev      # Бэкенд API на порту 8090
+make frontend-dev     # Фронтенд на порту 5173
+make telegram-dev     # Telegram бот
+
+# 3. Установка зависимостей
+make deps-all         # Все зависимости
+make deps-backend     # Только Go зависимости
+make deps-frontend    # Только Node.js зависимости
+
+# 4. Мониторинг
+make logs             # Все логи
+make logs-app         # Логи бэкенда
+make logs-bot         # Логи Telegram бота
+make logs-frontend    # Логи фронтенда
+make ps               # Статус контейнеров
+
+# 5. Очистка
+make clean            # Остановить контейнеры и очистить тома
+make clean-all        # Полная очистка системы
+```
